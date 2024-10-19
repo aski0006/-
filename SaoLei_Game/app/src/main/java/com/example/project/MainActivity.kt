@@ -53,41 +53,55 @@ enum class Difficulty(val gridSize: Int, val mineNumber: Int) {
     HARD(12, 20)
 }
 
+/**
+ * 主活动类，应用的入口点。
+ *
+ * 该类负责设置应用的主题，布局以及初始状态。它包含游戏标题、难度面板、开始游戏按钮和档案按钮。
+ */
 class MainActivity : ComponentActivity() {
+
+    /**
+     * 活动创建时调用。
+     *
+     * 在此方法中设置应用的界面，初始化状态，并定义用户交互的组件。
+     *
+     * @param savedInstanceState 如果活动之前被销毁并且正在重新创建，则此包裹中包含先前保存的状态。
+     */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
+        enableEdgeToEdge() // 启用全屏边缘模式
+
         setContent {
-            ProjectTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    val context = LocalContext.current
-                    val difficulty = remember { mutableStateOf(Difficulty.MEDIUM) }
+            ProjectTheme { // 应用自定义主题
+                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding -> // 使用 Scaffold 安排内容
+                    val context = LocalContext.current // 获取当前上下文
+                    val difficulty = remember { mutableStateOf(Difficulty.MEDIUM) } // 初始难度状态为中等
+
                     Column(
                         modifier = Modifier
-                            .padding(innerPadding)
-                            .fillMaxSize(),
-                        horizontalAlignment = Alignment.CenterHorizontally
+                            .padding(innerPadding) // 设置内部填充
+                            .fillMaxSize(), // 填充满屏幕
+                        horizontalAlignment = Alignment.CenterHorizontally // 水平居中对齐内容
                     ) {
-                        Spacer(modifier = Modifier.height(100.dp)) // 距离顶部100.dp
+                        Spacer(modifier = Modifier.height(100.dp)) // 顶部间隙100.dp
 
-                        GameTitle()
+                        GameTitle() // 显示游戏标题
 
-                        Spacer(modifier = Modifier.weight(1f)) // 中间隔开
+                        Spacer(modifier = Modifier.weight(1f)) // 中间间隙，权重设置为1f
 
-                        DifficultyPanel(difficulty)
+                        DifficultyPanel(difficulty) // 显示难度选择面板
 
-                        Spacer(modifier = Modifier.weight(1f)) // 中间隔开
+                        Spacer(modifier = Modifier.weight(1f)) // 中间间隙，权重设置为1f
 
-                        GameStartButton(context, difficulty)
+                        GameStartButton(context, difficulty) // 显示开始游戏按钮
+
+                        ArchivesStartButton(context) // 显示查看游戏记录按钮
                     }
                 }
             }
         }
     }
 }
-
-
-
 
 
 @Composable
@@ -123,6 +137,14 @@ fun DifficultyPanel(difficulty: MutableState<Difficulty>) {
     }
 }
 
+/**
+ * 游戏开始按钮的可组合函数。
+ *
+ * 此函数创建一个按钮，点击后将启动游戏活动，并将当前的难度状态参数传递给该活动。
+ *
+ * @param context 当前的上下文，用于启动新的活动。
+ * @param difficulty 当前选中的难度状态的可变引用。
+ */
 @Composable
 fun GameStartButton(context: Context, difficulty: MutableState<Difficulty>) {
     Button(
@@ -138,6 +160,33 @@ fun GameStartButton(context: Context, difficulty: MutableState<Difficulty>) {
     ) {
         Text(
             text = "开始游戏",
+            fontSize = 26.sp,
+            fontFamily = FontFamily.Serif,
+            textAlign = TextAlign.Center
+        )
+    }
+}
+
+/**
+ * 游戏记录按钮的可组合函数。
+ *
+ * 此函数创建一个按钮，点击后将启动游戏记录活动。
+ *
+ * @param context 当前的上下文，用于启动新的活动。
+ */
+@Composable
+fun ArchivesStartButton(context: Context){
+    Button(
+        onClick = {
+            val intent = Intent(context, ArchivesActivity::class.java)
+            context.startActivity(intent)
+        },
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(bottom = 100.dp)
+    ) {
+        Text(
+            text = "游戏记录",
             fontSize = 26.sp,
             fontFamily = FontFamily.Serif,
             textAlign = TextAlign.Center

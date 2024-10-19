@@ -1,4 +1,4 @@
-package com.example.project.ui.theme
+package com.example.project
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
