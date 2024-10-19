@@ -24,6 +24,10 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.project.game_components.DisplayGameTime
+import com.example.project.game_components.GameOverScreen
+import com.example.project.game_components.GameWinScreen
+import com.example.project.game_components.MineField
+import com.example.project.game_components.OperatorButton
 import com.example.project.game_functions.generateRandomMinesList
 import com.example.project.ui.theme.ProjectTheme
 import kotlin.time.Duration.Companion.minutes
@@ -72,7 +76,7 @@ class GameActivity : ComponentActivity() {
         enableEdgeToEdge()
         val gridSize = intent.getIntExtra("gridSize", 8) // 默认值为8
         val mineNumber = intent.getIntExtra("mineNumber", 10) // 默认值为10
-        val gameTime= (intent.getIntExtra("gameTime", 4)).minutes
+        val gameTime = (intent.getIntExtra("gameTime", 4)).minutes
         setContent {
             ProjectTheme {
                 val gameState = remember { mutableStateOf(GameState.PROCESSING) }
@@ -82,14 +86,31 @@ class GameActivity : ComponentActivity() {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
                     Column(
                         modifier = Modifier
-                            .padding(10.dp)
+                            .padding(innerPadding)
                             .fillMaxWidth(),
                         horizontalAlignment = Alignment.CenterHorizontally // 水平居中
-                    ){
+                    ) {
                         Spacer(modifier = Modifier.height(50.dp))
                         if (gameState.value == GameState.PROCESSING) {
                             DisplayGameTime(gameTime, gameState)
                         }
+                        Spacer(modifier = Modifier.height(50.dp))
+
+                        when (gameState.value) {
+                            GameState.PROCESSING -> {
+                                MineField(showAnswer, operatorState, gameState, mineData)
+                                OperatorButton(operatorState)
+                            }
+
+                            GameState.ENDING -> {
+                                GameOverScreen(showAnswer, operatorState, gameState, mineData)
+                            }
+
+                            GameState.SUCCESSFUL -> {
+                                GameWinScreen()
+                            }
+                        }
+
                         ReturnMainActivity()
                     }
                 }
