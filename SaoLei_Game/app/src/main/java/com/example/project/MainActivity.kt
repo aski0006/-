@@ -36,21 +36,21 @@ import com.example.project.ui.theme.ProjectTheme
  * @property gridSize 网格的尺寸
  * @property mineNumber 地雷的数量
  */
-enum class Difficulty(val gridSize: Int, val mineNumber: Int) {
+enum class Difficulty(val gridSize: Int, val mineNumber: Int, val gameTime: Int) {
     /**
      * 简单难度，网格尺寸为 8，地雷数量为 10.
      */
-    EASY(8, 10),
+    EASY(8, 10, 3),
 
     /**
      * 中等难度，网格尺寸为 10，地雷数量为 15.
      */
-    MEDIUM(10, 15),
+    MEDIUM(10, 15, 4),
 
     /**
      * 困难难度，网格尺寸为 12，地雷数量为 20.
      */
-    HARD(12, 20)
+    HARD(12, 20, 5)
 }
 
 /**
@@ -152,10 +152,10 @@ fun GameStartButton(context: Context, difficulty: MutableState<Difficulty>) {
             val intent = Intent(context, GameActivity::class.java)
             intent.putExtra("gridSize", difficulty.value.gridSize)
             intent.putExtra("mineNumber", difficulty.value.mineNumber)
+            intent.putExtra("gameTime", difficulty.value.gameTime)
             context.startActivity(intent)
         },
         modifier = Modifier
-            .fillMaxWidth()
             .padding(bottom = 100.dp)
     ) {
         Text(
@@ -175,14 +175,13 @@ fun GameStartButton(context: Context, difficulty: MutableState<Difficulty>) {
  * @param context 当前的上下文，用于启动新的活动。
  */
 @Composable
-fun ArchivesStartButton(context: Context){
+fun ArchivesStartButton(context: Context) {
     Button(
         onClick = {
             val intent = Intent(context, ArchivesActivity::class.java)
             context.startActivity(intent)
         },
         modifier = Modifier
-            .fillMaxWidth()
             .padding(bottom = 100.dp)
     ) {
         Text(
