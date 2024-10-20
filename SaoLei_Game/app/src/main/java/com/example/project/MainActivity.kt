@@ -70,7 +70,6 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge() // 启用全屏边缘模式
-
         setContent {
             ProjectTheme { // 应用自定义主题
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding -> // 使用 Scaffold 安排内容
